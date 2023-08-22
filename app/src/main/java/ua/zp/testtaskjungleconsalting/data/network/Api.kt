@@ -5,5 +5,5 @@ import ua.zp.testtaskjungleconsalting.data.network.responses.UsersListResponse
 
 interface Api {
     @GET("/users")
-    suspend fun getListUsers(): UsersListResponse
+    suspend fun getListUsers(): List<UsersListResponse>
 }
