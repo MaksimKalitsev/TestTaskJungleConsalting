@@ -7,17 +7,18 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import ua.zp.testtaskjungleconsalting.data.network.Api
 import ua.zp.testtaskjungleconsalting.data.network.responses.UsersListResponse
+import ua.zp.testtaskjungleconsalting.repository.UsersRepository
 import javax.inject.Inject
 
 @HiltViewModel
-class UsersListViewModel @Inject constructor(private val api: Api): ViewModel() {
+class UsersListViewModel @Inject constructor(private val repository: UsersRepository): ViewModel() {
 
     private val userListState = MutableStateFlow<List<UsersListResponse>>(emptyList())
 
     private fun fetchUsers(){
         viewModelScope.launch {
             try {
-                val response = api.getListUsers()
+                val response = repository.getUsers()
                 userListState.value = listOf(response)
             }catch (e:Exception){
 
