@@ -3,7 +3,7 @@ package ua.zp.testtaskjungleconsalting.data.network.responses
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
-import ua.zp.testtaskjungleconsalting.data.models.Users
+import ua.zp.testtaskjungleconsalting.data.models.User
 
 @Parcelize
 data class UsersListResponse(
@@ -14,8 +14,8 @@ data class UsersListResponse(
     @SerializedName("repos_url")
     val reposUrl: String
 ) : Parcelable {
-    fun toUsers(): Users =
-        Users(
+    fun toUsers(): User =
+        User(
             login = login,
             id = id,
             avatar = avatarUrl,

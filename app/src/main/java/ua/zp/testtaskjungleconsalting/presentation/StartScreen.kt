@@ -31,8 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import ua.zp.testtaskjungleconsalting.UsersListViewModel
-import ua.zp.testtaskjungleconsalting.data.models.Users
-import ua.zp.testtaskjungleconsalting.data.network.responses.UsersListResponse
+import ua.zp.testtaskjungleconsalting.data.models.User
 
 @Composable
 fun StartScreen(navController: NavController, viewModel: UsersListViewModel) {
@@ -56,7 +55,7 @@ fun StartScreen(navController: NavController, viewModel: UsersListViewModel) {
 }
 
     @Composable
-    fun UserRow(user: Users, viewModel: UsersListViewModel, navController: NavController) {
+    fun UserRow(user: User, viewModel: UsersListViewModel, navController: NavController) {
         Card(
             modifier = Modifier
                 .padding(5.dp, 4.dp, 5.dp, 4.dp)
@@ -64,7 +63,7 @@ fun StartScreen(navController: NavController, viewModel: UsersListViewModel) {
                 .clickable(indication = rememberRipple(bounded = true),
                     interactionSource = remember { MutableInteractionSource() }) {
                     viewModel.addUser(user)
-                    navController.navigate(Screen.DetailsScreen.route)
+                    navController.navigate(Screen.DetailsScreen.route.replace("{login}", user.login))
                 },
             shape = RoundedCornerShape(CornerSize(5.dp)),
         ) {
@@ -93,14 +92,14 @@ fun StartScreen(navController: NavController, viewModel: UsersListViewModel) {
                         modifier = Modifier.padding(5.dp),
                         overflow = TextOverflow.Ellipsis,
                         style = MaterialTheme.typography.titleMedium,
-                        fontFamily = FontFamily.Cursive
+                        fontFamily = FontFamily.Default
                     )
                     Text(
                         text = user.login,
                         maxLines = 1,
                         modifier = Modifier.padding(5.dp),
                         style = MaterialTheme.typography.titleMedium,
-                        fontFamily = FontFamily.Cursive
+                        fontFamily = FontFamily.Default
                     )
 
                     Text(
@@ -108,7 +107,7 @@ fun StartScreen(navController: NavController, viewModel: UsersListViewModel) {
                         maxLines = 1,
                         modifier = Modifier.padding(5.dp),
                         style = MaterialTheme.typography.titleMedium,
-                        fontFamily = FontFamily.Cursive
+                        fontFamily = FontFamily.Default
                     )
                 }
             }

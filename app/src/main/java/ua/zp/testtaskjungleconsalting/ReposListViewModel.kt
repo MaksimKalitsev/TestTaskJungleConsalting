@@ -9,32 +9,31 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import ua.zp.testtaskjungleconsalting.data.models.User
+import ua.zp.testtaskjungleconsalting.data.models.RepositoryItem
 import ua.zp.testtaskjungleconsalting.repository.UsersRepository
 import javax.inject.Inject
 
 @HiltViewModel
-class UsersListViewModel @Inject constructor(private val repository: UsersRepository) :
+class ReposListViewModel @Inject constructor(private val repository: UsersRepository) :
     ViewModel() {
 
     val isLoading = mutableStateOf(true)
 
-    private val _userListState = MutableStateFlow<List<User>>(emptyList())
-    val userListState = _userListState.asStateFlow()
+    private val _reposListState = MutableStateFlow<List<RepositoryItem>>(emptyList())
+    val reposListState = _reposListState.asStateFlow()
 
-    var user by mutableStateOf<User?>(null)
+    var repo by mutableStateOf<RepositoryItem?>(null)
         private set
 
-    fun fetchUsers() {
+    fun fetchRepos(login: String){
         viewModelScope.launch {
             isLoading.value = false
-            val response = repository.getUsers()
-            _userListState.value = response.map { it.toUsers() }
-
+            val response = repository.getRepos(login)
+            _reposListState.value = response.map { it.toRepos() }
         }
     }
 
-    fun addUser(newUser: User) {
-        user = newUser
+    fun addRepo(newRepo: RepositoryItem) {
+        repo = newRepo
     }
 }

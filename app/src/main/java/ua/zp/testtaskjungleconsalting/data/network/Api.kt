@@ -14,8 +14,4 @@ interface Api {
         @Path("user") user: String
     ): List<UserReposResponse>
 
-//    @GET("rest/device/{device}/cmpltdesc")
-//    suspend fun getDevice(
-//        @Path("device") device: String
-//    ): DeviceResponse
 }

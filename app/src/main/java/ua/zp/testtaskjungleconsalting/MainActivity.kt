@@ -7,10 +7,7 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import dagger.hilt.android.AndroidEntryPoint
 import ua.zp.testtaskjungleconsalting.presentation.Navigation
 import ua.zp.testtaskjungleconsalting.ui.theme.TestTaskJungleConsaltingTheme
@@ -19,6 +16,7 @@ import ua.zp.testtaskjungleconsalting.ui.theme.TestTaskJungleConsaltingTheme
 class MainActivity : ComponentActivity() {
 
     private val viewModel: UsersListViewModel by viewModels()
+    private val viewModel2: ReposListViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -27,7 +25,11 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Navigation(viewModel = viewModel, context = this@MainActivity)
+                    Navigation(
+                        userListViewModel = viewModel,
+                        reposListViewModel = viewModel2,
+                        context = this@MainActivity
+                    )
                 }
             }
         }
