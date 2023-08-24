@@ -7,7 +7,7 @@ import ua.zp.testtaskjungleconsalting.data.db.UserEntity
 import ua.zp.testtaskjungleconsalting.data.models.User
 
 @Parcelize
-data class UsersListResponse(
+data class UserResponse(
     val login: String,
     val id: Int,
     @SerializedName("avatar_url")
@@ -15,19 +15,12 @@ data class UsersListResponse(
     @SerializedName("repos_url")
     val reposUrl: String
 ) : Parcelable {
-    fun toUsers(): User =
+
+    fun toUser(): User =
         User(
             login = login,
             id = id,
             avatar = avatarUrl,
             repos_url = reposUrl
-        )
-
-    fun toUserEntity(): UserEntity =
-        UserEntity(
-            login = login,
-            id = id,
-            avatarUrl = avatarUrl,
-            reposUrl = reposUrl
         )
 }

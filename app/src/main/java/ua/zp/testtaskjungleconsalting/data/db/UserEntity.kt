@@ -11,7 +11,8 @@ import ua.zp.testtaskjungleconsalting.data.models.User
         Index("id", unique = true)
     ])
 data class UserEntity (
-    @PrimaryKey (autoGenerate = true) val id: Int,
+    @PrimaryKey (autoGenerate = true)
+    val id: Int,
     val login: String,
     val avatarUrl: String,
     val reposUrl: String

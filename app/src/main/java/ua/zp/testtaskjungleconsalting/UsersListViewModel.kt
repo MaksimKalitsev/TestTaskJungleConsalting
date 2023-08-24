@@ -1,40 +1,26 @@
 package ua.zp.testtaskjungleconsalting
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.cachedIn
+import androidx.paging.map
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-import ua.zp.testtaskjungleconsalting.data.models.User
-import ua.zp.testtaskjungleconsalting.repository.UsersRepository
+import kotlinx.coroutines.flow.map
+import ua.zp.testtaskjungleconsalting.data.db.UserEntity
 import javax.inject.Inject
 
 @HiltViewModel
-class UsersListViewModel @Inject constructor(private val repository: UsersRepository) :
-    ViewModel() {
+class UsersListViewModel @Inject constructor(
+    pager: Pager<Int, UserEntity>
+) : ViewModel() {
 
-    val isLoading = mutableStateOf(true)
 
-    private val _userListState = MutableStateFlow<List<User>>(emptyList())
-    val userListState = _userListState.asStateFlow()
-
-    var user by mutableStateOf<User?>(null)
-        private set
-
-    fun fetchUsers() {
-        viewModelScope.launch {
-            isLoading.value = false
-            val response = repository.getUsers()
-            _userListState.value = response.map { it.toUsers() }
-
+    val userPagingFlow = pager
+        .flow
+        .map { pagingData ->
+            pagingData.map { it.toUser() }
         }
-    }
+        .cachedIn(viewModelScope)
 
-    fun addUser(newUser: User) {
-        user = newUser
-    }
 }

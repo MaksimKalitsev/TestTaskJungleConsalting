@@ -70,8 +70,10 @@ dependencies {
 
     implementation 'io.coil-kt:coil-compose:2.2.2'
 
-    implementation "androidx.paging:paging-runtime-ktx:3.2.0"
-    implementation "androidx.paging:paging-compose:3.2.0"
+    implementation "androidx.paging:paging-runtime-ktx:3.1.1"
+//    implementation "androidx.paging:paging-runtime-ktx:3.2.0"
+//    implementation "androidx.paging:paging-compose:3.2.0"
+    implementation "androidx.paging:paging-compose:1.0.0-alpha18"
 
     implementation "androidx.room:room-ktx:2.5.2"
     kapt "androidx.room:room-compiler:2.5.2"

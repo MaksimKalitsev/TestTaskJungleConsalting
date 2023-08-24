@@ -1,34 +1,39 @@
 package ua.zp.testtaskjungleconsalting.presentation
 
-import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.paging.compose.collectAsLazyPagingItems
 import ua.zp.testtaskjungleconsalting.ReposListViewModel
 import ua.zp.testtaskjungleconsalting.UsersListViewModel
 
 @Composable
-fun Navigation(userListViewModel: UsersListViewModel, reposListViewModel: ReposListViewModel, context: Context) {
+fun Navigation() {
 
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = Screen.StartScreen.route) {
 
         composable(Screen.StartScreen.route) {
+            val userListViewModel = hiltViewModel<UsersListViewModel>()
+            val users = userListViewModel.userPagingFlow.collectAsLazyPagingItems()
             StartScreen(
                 navController = navController,
-                viewModel = userListViewModel,
+                users = users
             )
         }
         composable(Screen.DetailsScreen.route) { backStackEntry ->
-            val login = backStackEntry.arguments?.getString("login")
-            if (login != null) {
-                DetailsScreen(
-                    viewModel = reposListViewModel,
-                    login = login
-                )
-            }
+            val login = backStackEntry.arguments?.getString("login") ?: return@composable // todo: pass whole user instead of just login
+            val repoListViewModel = hiltViewModel<ReposListViewModel>()
+
+            repoListViewModel.setLogin(login)
+            val repos = repoListViewModel.repoPagingFlow.collectAsLazyPagingItems()
+
+            DetailsScreen(
+                repos = repos
+            )
         }
     }
 }

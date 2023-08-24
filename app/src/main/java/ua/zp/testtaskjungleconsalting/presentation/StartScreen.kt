@@ -1,17 +1,19 @@
 package ua.zp.testtaskjungleconsalting.presentation
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ripple.rememberRipple
@@ -21,48 +23,71 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.items
 import coil.compose.rememberAsyncImagePainter
-import ua.zp.testtaskjungleconsalting.UsersListViewModel
 import ua.zp.testtaskjungleconsalting.data.models.User
 
 @Composable
-fun StartScreen(navController: NavController, viewModel: UsersListViewModel) {
+fun StartScreen(navController: NavController, users:LazyPagingItems<User>) {
 
-    val isLoading = viewModel.isLoading.value
-    val userList = viewModel.userListState.collectAsState().value
-
-    LaunchedEffect(Unit) {
-        viewModel.fetchUsers()
+    val context = LocalContext.current
+    LaunchedEffect(key1 = users.loadState) {
+        if(users.loadState.refresh is LoadState.Error) {
+            Toast.makeText(
+                context,
+                "Error: " + (users.loadState.refresh as LoadState.Error).error.message,
+                Toast.LENGTH_LONG
+            ).show()
+        }
     }
-
-    if (isLoading) {
-        CircularProgressIndicator()
-    } else {
-        LazyColumn(modifier = Modifier.fillMaxWidth()) {
-            items(userList) { user ->
-                UserRow(user = user, viewModel = viewModel, navController = navController)
+    Box(modifier = Modifier.fillMaxSize()) {
+        if(users.loadState.refresh is LoadState.Loading) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center)
+            )
+        } else {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                items(users) { user ->
+                    if(user != null) {
+                        UserRow(
+                            user = user,
+                            navController = navController
+                        )
+                    }
+                }
+                item {
+                    if(users.loadState.append is LoadState.Loading) {
+                        CircularProgressIndicator()
+                    }
+                }
             }
         }
     }
 }
 
     @Composable
-    fun UserRow(user: User, viewModel: UsersListViewModel, navController: NavController) {
+    fun UserRow(user: User, navController: NavController) {
         Card(
             modifier = Modifier
                 .padding(5.dp, 4.dp, 5.dp, 4.dp)
                 .fillMaxWidth()
                 .clickable(indication = rememberRipple(bounded = true),
                     interactionSource = remember { MutableInteractionSource() }) {
-                    viewModel.addUser(user)
                     navController.navigate(Screen.DetailsScreen.route.replace("{login}", user.login))
                 },
             shape = RoundedCornerShape(CornerSize(5.dp)),

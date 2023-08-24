@@ -1,39 +1,29 @@
 package ua.zp.testtaskjungleconsalting
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.cachedIn
+import androidx.paging.map
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-import ua.zp.testtaskjungleconsalting.data.models.RepositoryItem
-import ua.zp.testtaskjungleconsalting.repository.UsersRepository
+import kotlinx.coroutines.flow.map
+import ua.zp.testtaskjungleconsalting.data.db.RepoEntity
+import ua.zp.testtaskjungleconsalting.data.network.ReposRemoteMediator
 import javax.inject.Inject
 
 @HiltViewModel
-class ReposListViewModel @Inject constructor(private val repository: UsersRepository) :
-    ViewModel() {
+class ReposListViewModel @Inject constructor(
+    private val remoteMediator: ReposRemoteMediator,
+    pager: Pager<Int, RepoEntity>
+) : ViewModel() {
+    fun setLogin(login: String) {
+        remoteMediator.login = login
+    }
 
-    val isLoading = mutableStateOf(true)
-
-    private val _reposListState = MutableStateFlow<List<RepositoryItem>>(emptyList())
-    val reposListState = _reposListState.asStateFlow()
-
-    var repo by mutableStateOf<RepositoryItem?>(null)
-        private set
-
-    fun fetchRepos(login: String){
-        viewModelScope.launch {
-            isLoading.value = false
-            val response = repository.getRepos(login)
-            _reposListState.value = response.map { it.toRepos() }
+    val repoPagingFlow = pager
+        .flow
+        .map { pagingData ->
+            pagingData.map { it.toRepositoryItem() }
         }
-    }
-
-    fun addRepo(newRepo: RepositoryItem) {
-        repo = newRepo
-    }
+        .cachedIn(viewModelScope)
 }

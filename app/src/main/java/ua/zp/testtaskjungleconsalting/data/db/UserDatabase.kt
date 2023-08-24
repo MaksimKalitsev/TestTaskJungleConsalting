@@ -3,8 +3,9 @@ package ua.zp.testtaskjungleconsalting.data.db
 import androidx.room.Database
 import androidx.room.RoomDatabase
 
-@Database(version = 1, entities = [UserEntity::class])
+@Database(version = 1, entities = [UserEntity::class, RepoEntity::class])
 abstract class UserDatabase : RoomDatabase() {
 
-    abstract val dao: UserDao
+    abstract val daoUser: UserDao
+    abstract val daoRepo: ReposDao
 }
