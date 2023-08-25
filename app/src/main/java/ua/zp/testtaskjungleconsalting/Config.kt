@@ -1,5 +1,5 @@
 package ua.zp.testtaskjungleconsalting
 
-object Confiq {
+object Config {
     const val BASE_URL = "https://api.github.com/"
 }

@@ -1,4 +1,4 @@
-package ua.zp.testtaskjungleconsalting
+package ua.zp.testtaskjungleconsalting.presentation.detailsscreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

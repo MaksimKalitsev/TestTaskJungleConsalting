@@ -18,7 +18,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import ua.zp.testtaskjungleconsalting.Confiq
+import ua.zp.testtaskjungleconsalting.Config
 import ua.zp.testtaskjungleconsalting.data.db.RepoEntity
 import ua.zp.testtaskjungleconsalting.data.db.Database
 import ua.zp.testtaskjungleconsalting.data.db.UserEntity
@@ -68,7 +68,7 @@ class NetworkModule {
     @Singleton
     fun provideRetrofit(gson: Gson, okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(Confiq.BASE_URL)
+            .baseUrl(Config.BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
@@ -120,15 +120,13 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideUserRemoteMediator(userDb: Database, userRepository: IUsersRepository) = UserRemoteMediator(
-        userDb = userDb,
+    fun provideUserRemoteMediator(userRepository: IUsersRepository) = UserRemoteMediator(
         usersRepository = userRepository
     )
 
     @Provides
     @Singleton
-    fun provideReposRemoteMediator(repoDb: Database, reposRepository: IReposRepository) = ReposRemoteMediator(
-        repoDb = repoDb,
+    fun provideReposRemoteMediator(reposRepository: IReposRepository) = ReposRemoteMediator(
         reposRepository = reposRepository
     )
 

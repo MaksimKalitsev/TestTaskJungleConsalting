@@ -16,7 +16,7 @@ data class UserEntity (
     val login: String,
     val avatarUrl: String,
     val reposUrl: String
-    ){
+){
     fun toUser(): User =
         User(
             id = id,

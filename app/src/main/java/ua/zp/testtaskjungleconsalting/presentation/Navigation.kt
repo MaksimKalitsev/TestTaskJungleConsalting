@@ -6,8 +6,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.compose.collectAsLazyPagingItems
-import ua.zp.testtaskjungleconsalting.ReposListViewModel
-import ua.zp.testtaskjungleconsalting.UsersListViewModel
+import ua.zp.testtaskjungleconsalting.presentation.detailsscreen.ReposListViewModel
+import ua.zp.testtaskjungleconsalting.presentation.detailsscreen.DetailsScreen
+import ua.zp.testtaskjungleconsalting.presentation.startscreen.UsersListViewModel
+import ua.zp.testtaskjungleconsalting.presentation.startscreen.StartScreen
 
 @Composable
 fun Navigation() {
@@ -25,7 +27,7 @@ fun Navigation() {
             )
         }
         composable(Screen.DetailsScreen.route) { backStackEntry ->
-            val login = backStackEntry.arguments?.getString("login") ?: return@composable // todo: pass whole user instead of just login
+            val login = backStackEntry.arguments?.getString("login") ?: return@composable
             val repoListViewModel = hiltViewModel<ReposListViewModel>()
 
             repoListViewModel.setLogin(login)

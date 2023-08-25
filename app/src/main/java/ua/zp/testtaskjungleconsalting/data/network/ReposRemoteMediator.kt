@@ -4,16 +4,14 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import androidx.room.withTransaction
 import ua.zp.testtaskjungleconsalting.data.db.RepoEntity
-import ua.zp.testtaskjungleconsalting.data.db.Database
 import ua.zp.testtaskjungleconsalting.repository.IReposRepository
+import kotlin.jvm.Throws
 
 @OptIn(ExperimentalPagingApi::class)
 class ReposRemoteMediator(
-    private val repoDb: Database, // todo: get it out of here
     private val reposRepository: IReposRepository
-): RemoteMediator<Int, RepoEntity>() {
+) : RemoteMediator<Int, RepoEntity>() {
 
     var login: String? = null
 
@@ -24,14 +22,15 @@ class ReposRemoteMediator(
         return try {
 
 
-            val loadKey = when(loadType) {
+            val loadKey = when (loadType) {
                 LoadType.REFRESH -> 1
                 LoadType.PREPEND -> return MediatorResult.Success(
                     endOfPaginationReached = true
                 )
+
                 LoadType.APPEND -> {
                     val lastItem = state.lastItemOrNull()
-                    if(lastItem == null) {
+                    if (lastItem == null) {
                         1
                     } else {
 
@@ -48,21 +47,18 @@ class ReposRemoteMediator(
                 pageCount = state.config.pageSize
             )
 
-            reposResult.getOrNull()?.let {  repos ->
-                repoDb.withTransaction {
-                    if (loadType == LoadType.REFRESH) {
-                        repoDb.daoRepo.clearAll()
-                    }
-                    val repoEntities = repos.map { it.toRepoEntity() }
-                    repoDb.daoRepo.upsertAll(repoEntities)
+            reposResult.getOrNull()?.let { repos ->
+                val updateResult = reposRepository.updateReposTable(repos)
+                updateResult.getOrNull()?.let {
+                    return MediatorResult.Success(
+                        endOfPaginationReached = repos.isEmpty()
+                    )
                 }
 
-                return MediatorResult.Success(
-                    endOfPaginationReached = repos.isEmpty()
-                )
-
-            } ?: return MediatorResult.Error(reposResult.exceptionOrNull() ?: Exception("Unknown Exception"))
-        } catch(e: Exception) {
+            } ?: return MediatorResult.Error(
+                reposResult.exceptionOrNull() ?: Exception("Unknown Exception")
+            )
+        } catch (e: Exception) {
             MediatorResult.Error(e)
         }
 
