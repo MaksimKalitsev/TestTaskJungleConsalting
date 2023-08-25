@@ -6,12 +6,12 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import ua.zp.testtaskjungleconsalting.data.db.RepoEntity
-import ua.zp.testtaskjungleconsalting.data.db.UserDatabase
+import ua.zp.testtaskjungleconsalting.data.db.Database
 import ua.zp.testtaskjungleconsalting.repository.IReposRepository
 
 @OptIn(ExperimentalPagingApi::class)
 class ReposRemoteMediator(
-    private val repoDb: UserDatabase, // todo: get it out of here
+    private val repoDb: Database, // todo: get it out of here
     private val reposRepository: IReposRepository
 ): RemoteMediator<Int, RepoEntity>() {
 

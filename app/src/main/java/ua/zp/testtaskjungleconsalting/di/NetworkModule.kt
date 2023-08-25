@@ -20,7 +20,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ua.zp.testtaskjungleconsalting.Confiq
 import ua.zp.testtaskjungleconsalting.data.db.RepoEntity
-import ua.zp.testtaskjungleconsalting.data.db.UserDatabase
+import ua.zp.testtaskjungleconsalting.data.db.Database
 import ua.zp.testtaskjungleconsalting.data.db.UserEntity
 import ua.zp.testtaskjungleconsalting.data.network.Api
 import ua.zp.testtaskjungleconsalting.data.network.ReposRemoteMediator
@@ -83,10 +83,10 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideUserDatabase(@ApplicationContext context: Context): UserDatabase {
+    fun provideUserDatabase(@ApplicationContext context: Context): Database {
         return Room.databaseBuilder(
             context,
-            UserDatabase::class.java,
+            Database::class.java,
             "users.db"
         ).build()
     }
@@ -94,7 +94,7 @@ class NetworkModule {
     @OptIn(ExperimentalPagingApi::class)
     @Provides
     @Singleton
-    fun provideUserPager(userDb: UserDatabase, remoteMediator: UserRemoteMediator): Pager<Int, UserEntity> {
+    fun provideUserPager(userDb: Database, remoteMediator: UserRemoteMediator): Pager<Int, UserEntity> {
         return Pager(
             config = PagingConfig(pageSize = 20),
             remoteMediator = remoteMediator,
@@ -107,7 +107,7 @@ class NetworkModule {
     @OptIn(ExperimentalPagingApi::class)
     @Provides
     @Singleton
-    fun provideRepoPager(repoDb: UserDatabase, remoteMediator: ReposRemoteMediator): Pager<Int, RepoEntity> {
+    fun provideRepoPager(repoDb: Database, remoteMediator: ReposRemoteMediator): Pager<Int, RepoEntity> {
         return Pager(
             config = PagingConfig(pageSize = 20),
             remoteMediator = remoteMediator,
@@ -120,14 +120,14 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideUserRemoteMediator(userDb: UserDatabase, userRepository: IUsersRepository) = UserRemoteMediator(
+    fun provideUserRemoteMediator(userDb: Database, userRepository: IUsersRepository) = UserRemoteMediator(
         userDb = userDb,
         usersRepository = userRepository
     )
 
     @Provides
     @Singleton
-    fun provideReposRemoteMediator(repoDb: UserDatabase, reposRepository: IReposRepository) = ReposRemoteMediator(
+    fun provideReposRemoteMediator(repoDb: Database, reposRepository: IReposRepository) = ReposRemoteMediator(
         repoDb = repoDb,
         reposRepository = reposRepository
     )

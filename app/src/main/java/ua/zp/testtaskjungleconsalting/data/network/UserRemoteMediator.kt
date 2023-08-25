@@ -6,16 +6,14 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import retrofit2.HttpException
-import ua.zp.testtaskjungleconsalting.data.db.UserDatabase
+import ua.zp.testtaskjungleconsalting.data.db.Database
 import ua.zp.testtaskjungleconsalting.data.db.UserEntity
-import ua.zp.testtaskjungleconsalting.data.models.User
 import ua.zp.testtaskjungleconsalting.repository.IUsersRepository
-import ua.zp.testtaskjungleconsalting.repository.UsersRepository
 import java.io.IOException
 
 @OptIn(ExperimentalPagingApi::class)
 class UserRemoteMediator(
-    private val userDb: UserDatabase,
+    private val userDb: Database,
     private val usersRepository: IUsersRepository
 ): RemoteMediator<Int, UserEntity>() {
 
