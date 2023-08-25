@@ -20,3 +20,7 @@
      - Navigation
 
 
+![Sample video](https://github.com/MaksimKalitsev/TestTaskJungleConsalting/raw/master/video_2023-08-25_13-25-20.mp4)
+
+
+
